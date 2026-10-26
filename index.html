@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2b0f45">
+<title>Falta poco para tu cumpleaños</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@500;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --rosa:#ff4d79; --oro:#ffc94d; --ciruela:#2b0f45; --ciruela2:#5a1a5e; }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{overflow-x:hidden}
+  body{font-family:'Quicksand',sans-serif;color:#fff;min-height:100vh;overflow-x:hidden;
+    background:radial-gradient(ellipse at 50% 0%,#7a2a8a 0,transparent 60%),linear-gradient(180deg,var(--ciruela),var(--ciruela2) 70%,#8a2a6a)}
+  body.bloqueado{overflow:hidden;height:100vh}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:radial-gradient(circle,rgba(255,255,255,.55) 1px,transparent 1.6px),radial-gradient(circle,rgba(255,201,77,.5) 1.2px,transparent 2px);
+    background-size:90px 90px,140px 140px;background-position:0 0,40px 60px;opacity:.5;animation:brillo 4s ease-in-out infinite alternate}
+  @keyframes brillo{from{opacity:.25}to{opacity:.6}}
+  main{position:relative;z-index:3;max-width:520px;margin:0 auto;padding:0 18px 70px}
+  section{padding:34px 0 8px;text-align:center}
+  h2{font-family:'Pacifico';font-weight:400;font-size:1.8rem;color:var(--oro);margin-bottom:6px;text-shadow:0 2px 0 rgba(0,0,0,.25)}
+  .sub{opacity:.8;font-size:.9rem;margin-bottom:16px}
+
+  /* Globos y corazones de fondo */
+  #globos{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+  .globo{position:absolute;bottom:-90px;width:44px;height:56px;border-radius:50% 50% 50% 50%/42% 42% 58% 58%;opacity:.8;animation:globo linear infinite}
+  .globo::after{content:"";position:absolute;left:50%;top:100%;width:2px;height:36px;background:rgba(255,255,255,.5)}
+  .globo::before{content:"";position:absolute;left:11px;top:9px;width:9px;height:14px;border-radius:50%;background:rgba(255,255,255,.45);transform:rotate(25deg)}
+  @keyframes globo{0%{transform:translateY(0) translateX(0)}50%{transform:translateY(-60vh) translateX(22px)}100%{transform:translateY(-130vh) translateX(-14px)}}
+  .corazon-f{position:absolute;bottom:-30px;color:#ff7aa0;opacity:.5;animation:sube linear infinite;font-style:normal}
+  @keyframes sube{0%{transform:translateY(0) rotate(-10deg);opacity:0}10%{opacity:.55}100%{transform:translateY(-115vh) rotate(10deg);opacity:0}}
+
+  /* Regalo (intro) */
+  #intro{position:fixed;inset:0;z-index:100;background:radial-gradient(ellipse at 50% 30%,#7a2a8a,#2b0f45 75%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;text-align:center;padding:30px;transition:opacity .8s,visibility .8s}
+  #intro.fuera{opacity:0;visibility:hidden}
+  #intro h1{font-family:'Pacifico';font-weight:400;font-size:2.1rem;line-height:1.2;color:#fff;text-shadow:0 3px 0 rgba(0,0,0,.3)}
+  #intro p{opacity:.85;max-width:300px}
+  .regalo{position:relative;width:150px;height:150px;margin-top:34px;cursor:pointer;animation:salta 1.6s ease-in-out infinite}
+  .regalo .cuerpo{position:absolute;left:10px;right:10px;bottom:0;height:98px;background:var(--rosa);border-radius:6px;box-shadow:0 14px 26px rgba(0,0,0,.4)}
+  .regalo .cuerpo::before{content:"";position:absolute;left:50%;margin-left:-11px;top:0;bottom:0;width:22px;background:var(--oro)}
+  .regalo .tapa{position:absolute;left:0;right:0;top:20px;height:40px;background:#ff7a9c;border-radius:6px;transition:transform .8s cubic-bezier(.3,1.6,.5,1),opacity .8s;z-index:2}
+  .regalo .tapa::before{content:"";position:absolute;left:50%;margin-left:-11px;top:0;bottom:0;width:22px;background:var(--oro)}
+  .regalo .tapa::after{content:"";position:absolute;left:50%;margin-left:-28px;top:-30px;width:56px;height:34px;border:9px solid var(--oro);border-radius:50% 50% 0 0;border-bottom:0}
+  .regalo.abierto{animation:none}
+  .regalo.abierto .tapa{transform:translateY(-120px) rotate(-24deg);opacity:0}
+  @keyframes salta{0%,100%{transform:translateY(0) rotate(0)}40%{transform:translateY(-14px) rotate(-3deg)}70%{transform:translateY(0) rotate(3deg)}}
+  .toca{font-size:.85rem;opacity:.8;animation:parpadeo 1.6s infinite}
+  @keyframes parpadeo{0%,100%{opacity:.4}50%{opacity:1}}
+
+  /* Portada + cuenta */
+  .hero{padding-top:30px}
+  .hero .peq{letter-spacing:3px;text-transform:uppercase;font-size:.78rem;opacity:.9;font-weight:700}
+  .hero h1{font-family:'Pacifico';font-weight:400;font-size:clamp(2.2rem,11vw,3.1rem);line-height:1.12;margin:8px 0 4px;text-shadow:0 4px 0 rgba(0,0,0,.3)}
+  .hero .fecha{opacity:.85;font-size:.92rem}
+  .cuenta{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:20px}
+  .cuenta div{background:rgba(255,255,255,.1);backdrop-filter:blur(6px);border:1.5px solid rgba(255,201,77,.55);border-radius:16px;padding:14px 2px 10px;box-shadow:0 8px 20px rgba(0,0,0,.25)}
+  .cuenta b{display:block;font-weight:700;font-size:2.1rem;color:var(--oro);line-height:1;font-variant-numeric:tabular-nums}
+  .cuenta b.tic{animation:tic .35s}
+  @keyframes tic{0%{transform:scale(1.35);color:#fff}100%{transform:scale(1)}}
+  .cuenta span{font-size:.68rem;letter-spacing:1px;text-transform:uppercase;opacity:.8}
+
+  /* Mensaje de hoy */
+  .dia-chip{display:inline-block;background:var(--oro);color:#4a1f55;font-weight:700;font-size:.8rem;letter-spacing:1px;padding:5px 14px;border-radius:20px;margin-bottom:16px;box-shadow:0 4px 10px rgba(0,0,0,.3)}
+  .hoy{background:#fffdf7;color:#4a2040;padding:12px 12px 16px;box-shadow:0 18px 36px rgba(0,0,0,.45);transform:rotate(-1.2deg);position:relative;animation:aparece .8s cubic-bezier(.2,1.2,.4,1) both}
+  .hoy::before{content:"";position:absolute;top:-13px;left:50%;width:96px;height:26px;margin-left:-48px;transform:rotate(2deg);background:rgba(255,201,77,.8);box-shadow:0 1px 3px rgba(0,0,0,.25);z-index:3}
+  @keyframes aparece{from{opacity:0;transform:translateY(30px) rotate(3deg) scale(.95)}to{opacity:1;transform:rotate(-1.2deg)}}
+  .carrusel{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;scrollbar-width:none}
+  .carrusel::-webkit-scrollbar{display:none}
+  .slide{flex:0 0 100%;scroll-snap-align:center;cursor:zoom-in}
+  .slide .im{position:relative;aspect-ratio:4/5;background:#d9cdb2;overflow:hidden}
+  .slide .im img{width:100%;height:100%;object-fit:cover;display:block}
+  .sello-fecha{position:absolute;right:10px;bottom:9px;font-family:'Courier New',monospace;font-weight:700;font-size:.95rem;letter-spacing:1px;color:#ff9a2e;text-shadow:0 0 6px rgba(255,120,0,.9),0 0 2px #a04000}
+  .slide .pie{font-family:'Caveat';font-weight:700;font-size:1.2rem;color:#5a3a2a;text-align:center;padding-top:8px;line-height:1.1}
+  .puntos{display:flex;justify-content:center;gap:6px;margin:10px 0 2px}
+  .puntos i{width:7px;height:7px;border-radius:50%;background:#e6d3e6;transition:.3s}
+  .puntos i.act{background:var(--rosa);width:20px;border-radius:5px}
+  .hoy .frase{font-family:'Caveat';font-weight:700;font-size:1.65rem;line-height:1.12;padding:12px 8px 2px;color:#7a1233}
+  .hoy .firma{font-family:'Caveat';font-weight:700;font-size:1.3rem;text-align:right;color:var(--rosa);padding:0 8px}
+  .datos{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+  .dato{background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.3);border-radius:14px;padding:10px 14px;font-size:.92rem;line-height:1.3;text-align:left}
+  .dato b{color:var(--oro)}
+  .dato.recuerdo{border-style:dashed}
+  .manana{margin-top:16px;background:rgba(255,255,255,.1);border:1.5px dashed rgba(255,255,255,.45);border-radius:16px;padding:14px 12px}
+  .manana small{display:block;opacity:.8;font-size:.78rem;letter-spacing:1px;text-transform:uppercase}
+  .manana b{font-size:1.7rem;color:var(--oro);font-variant-numeric:tabular-nums}
+
+  /* Días anteriores */
+  .previos{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:8px 4px 18px;scrollbar-width:none;text-align:left}
+  .previos::-webkit-scrollbar{display:none}
+  .prev{flex:0 0 150px;scroll-snap-align:start;background:#fffdf7;color:#4a2040;padding:7px 7px 10px;box-shadow:0 8px 18px rgba(0,0,0,.4);transform:rotate(-2deg);cursor:zoom-in}
+  .prev:nth-child(even){transform:rotate(2deg)}
+  .prev .im{position:relative}
+  .prev img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;background:#d9cdb2}
+  .prev .sello-fecha{font-size:.7rem;right:6px;bottom:6px}
+  .prev small{display:block;color:var(--rosa);font-weight:700;font-size:.7rem;letter-spacing:1px;margin-top:6px}
+  .prev p{font-family:'Caveat';font-weight:700;font-size:1.05rem;line-height:1.1;color:#7a1233;margin-top:2px}
+  .vacio{opacity:.75;font-size:.92rem;padding:10px 0}
+
+  /* Torta */
+  .pastel-wrap{max-width:320px;margin:0 auto;cursor:pointer}
+  .pastel-wrap svg{width:100%;height:auto;overflow:visible}
+  .llama{transform-box:fill-box;transform-origin:50% 100%;animation:llama .35s ease-in-out infinite alternate}
+  .llama.b{animation-duration:.5s}
+  @keyframes llama{from{transform:scaleY(1) skewX(-3deg)}to{transform:scaleY(1.18) skewX(4deg)}}
+  .apagado .llama{animation:none;opacity:0;transition:opacity .25s}
+  .humo{opacity:0}
+  .apagado .humo{animation:humo 1.8s ease-out}
+  @keyframes humo{0%{opacity:.8;transform:translateY(0)}100%{opacity:0;transform:translateY(-50px)}}
+  .acciones-torta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+  .btn2{border:2px solid rgba(255,255,255,.6);background:rgba(255,255,255,.12);color:#fff;border-radius:30px;padding:10px 16px;font:700 .9rem 'Quicksand';cursor:pointer}
+  .estado{min-height:1.5em;font-size:.85rem;opacity:.85;margin-top:8px}
+  .deseo{font-family:'Caveat';font-weight:700;font-size:1.6rem;color:#ffd6e2;margin-top:10px;min-height:2.4em}
+  .carta{background:#fffaf0;color:#5a2a2a;border-radius:6px;padding:20px 18px;font-family:'Caveat';font-weight:600;font-size:1.4rem;line-height:1.3;white-space:pre-wrap;box-shadow:0 10px 24px rgba(0,0,0,.35);text-align:left;margin-top:18px}
+  .carta .fir{display:block;text-align:right;color:var(--rosa);font-size:1.7rem;margin-top:6px}
+
+  .btn{border:0;border-radius:40px;padding:14px 28px;background:var(--rosa);color:#fff;font:700 1.02rem 'Quicksand';cursor:pointer;box-shadow:0 8px 20px rgba(255,77,121,.5)}
+  .final{padding:34px 0 16px;display:flex;flex-direction:column;gap:12px;align-items:center}
+  footer{text-align:center;font-size:.8rem;opacity:.6;padding-bottom:20px}
+  .conf{position:fixed;z-index:120;pointer-events:none;top:0;left:0;width:9px;height:14px;border-radius:2px}
+  #lightbox{position:fixed;inset:0;z-index:110;background:rgba(20,5,30,.93);display:none;align-items:center;justify-content:center;padding:16px;flex-direction:column;gap:10px}
+  #lightbox.on{display:flex}
+  #lightbox img{max-width:100%;max-height:80vh;border:8px solid #fffdf7;box-shadow:0 10px 40px rgba(0,0,0,.6)}
+  #lightbox p{font-family:'Caveat';font-size:1.6rem;text-align:center;max-width:420px}
+  #lightbox .x{position:absolute;top:12px;right:16px;font-size:2rem;color:#fff;background:none;border:0;cursor:pointer}
+  #musica{position:fixed;right:14px;bottom:14px;z-index:90;width:48px;height:48px;border-radius:50%;border:0;background:#fff;font-size:1.25rem;cursor:pointer;display:none;box-shadow:0 6px 16px rgba(0,0,0,.4)}
+  #musica.suena{animation:latido 1.3s infinite}
+  @keyframes latido{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body class="bloqueado">
+
+<div id="globos"></div>
+
+<div id="intro">
+  <h1 id="introTitulo"></h1>
+  <div class="regalo" id="regalo"><div class="cuerpo"></div><div class="tapa"></div></div>
+  <p id="introTxt"></p>
+  <span class="toca">toca el regalo para abrirlo</span>
+</div>
+
+<button id="musica" title="Música" aria-label="Música">🎵</button>
+<audio id="audio" loop preload="none"></audio>
+
+<main>
+  <section class="hero">
+    <div class="peq" id="peq"></div>
+    <h1 id="titulo"></h1>
+    <div class="fecha" id="fechaTxt"></div>
+    <div class="cuenta" id="cuenta">
+      <div><b id="c-d">0</b><span>Días</span></div>
+      <div><b id="c-h">0</b><span>Horas</span></div>
+      <div><b id="c-m">0</b><span>Min</span></div>
+      <div><b id="c-s">0</b><span>Seg</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="dia-chip" id="chip"></div>
+    <div class="hoy" id="hoy">
+      <div class="carrusel" id="carrusel"></div>
+      <div class="puntos" id="puntos"></div>
+      <div class="frase" id="hoyFrase"></div>
+      <div class="firma" id="hoyFirma"></div>
+    </div>
+    <div class="datos" id="datos"></div>
+    <div class="manana" id="manana"></div>
+  </section>
+
+  <section id="secPrev">
+    <h2>Lo que te dije estos días</h2>
+    <p class="sub" id="subPrev"></p>
+    <div class="previos" id="previos"></div>
+  </section>
+
+  <section id="secPastel" hidden>
+    <h2>Tu pastel</h2>
+    <p class="sub">Pide un deseo y sopla las velas.</p>
+    <div id="pastelCaja"></div>
+    <div class="acciones-torta">
+      <button class="btn2" id="btnMic">🎤 Soplar con el micrófono</button>
+      <button class="btn2" id="btnCantar">🎶 Que suene el cumpleaños feliz</button>
+    </div>
+    <div class="estado" id="micEstado">O toca el pastel para apagar las velas.</div>
+    <div class="deseo" id="deseo"></div>
+    <div class="carta" id="cartaCumple"></div>
+  </section>
+
+  <section class="final">
+    <button class="btn" id="btnVisto"></button>
+    <button class="btn" id="btnGracias" hidden></button>
+  </section>
+  <footer id="pie"></footer>
+</main>
+
+<div id="lightbox"><button class="x" aria-label="Cerrar">×</button><img id="lbImg" alt=""><p id="lbTxt"></p></div>
+
+<script>
+/* ============================================================
+   PERSONALIZA AQUÍ  (todo lo demás no hace falta tocarlo)
+   Cada día que ella abre el enlace o el QR ve cuánto falta y las fotos y la
+   frase de ESE día. Para probar otros días:  ?faltan=3   ·   ?modo=hoy (cumpleaños)
+   ============================================================ */
+const U = (id,w=800)=>`https://images.unsplash.com/photo-${id}?w=${w}&q=75&fit=crop&auto=format`;
+
+const CONFIG = {
+  nombre: "Valeria",
+  deParte: "Diego",
+  edad: 24,
+  fecha: "2026-11-02T00:00:00",       // cumpleaños (año-mes-díaTHORA)
+  juntosDesde: "2024-09-14",          // desde cuándo están juntos (para "412 días juntos")
+  telefono: "",                       // tu WhatsApp con código de país, sin + ni espacios
+
+  // Música de fondo (suena al tocar el regalo). Demo: "Possible Dreams" de Mixkit, gratis (licencia Mixkit).
+  // Para tu pedido: pon un MP3 en la misma carpeta y escribe su nombre, ej: "cancion.mp3". Vacío = sin música.
+  musica: "https://assets.mixkit.co/music/599/599.mp3",
+  volumen: 0.5,
+
+  // Un mensaje por día, del PRIMER día al ÚLTIMO día antes del cumpleaños.
+  // Cada día: 3-4 fotos (con fecha impresa y pie), una frase y un recuerdo.
+  mensajes: [
+    { frase: "Faltan 6 días y ya estoy contando cada segundo para abrazarte.",
+      recuerdo: "Nuestra primera cita, en la cafetería de siempre. Tú pediste un té y yo no pude dejar de mirarte.",
+      fotos: [ { src: U("1474552226712-ac0f0961a954"), fecha: "2025-02-14", texto: "Nuestra primera aventura" },
+               { src: U("1516589178581-6cd7833ae3b2"), fecha: "2025-03-02", texto: "Contigo todo es mejor" },
+               { src: U("1501901609772-df0848060b33"), fecha: "2025-04-20", texto: "Risas sin fin" } ] },
+    { frase: "Tu sonrisa es mi lugar favorito del mundo.",
+      recuerdo: "El día que me dijiste que sí. Todavía me tiemblan las manos al recordarlo.",
+      fotos: [ { src: U("1494774157365-9e04c6720e47"), fecha: "2024-09-14", texto: "El día que empezó todo" },
+               { src: U("1518199266791-5375a83190b7"), fecha: "2024-10-31", texto: "Nuestro primer Halloween" },
+               { src: U("1529634806980-85c3dd6d34ac"), fecha: "2025-01-01", texto: "Año nuevo contigo" } ] },
+    { frase: "Hoy te pensé más que ayer, pero menos que mañana.",
+      recuerdo: "Aquella tarde de lluvia en que nos quedamos hablando horas bajo un mismo paraguas.",
+      fotos: [ { src: U("1511895426328-dc8714191300"), fecha: "2025-05-10", texto: "Atardeceres a tu lado" },
+               { src: U("1490750967868-88aa4486c946"), fecha: "2025-05-11", texto: "Flores para ti" },
+               { src: U("1474552226712-ac0f0961a954"), fecha: "2025-06-08", texto: "Paseo de domingo" } ] },
+    { frase: "Faltan 3 días y ya tengo todo listo para sorprenderte.",
+      recuerdo: "Nuestro primer viaje juntos. Perdimos el bus, pero encontramos el mejor día.",
+      fotos: [ { src: U("1518895949257-7621c3c786d7"), fecha: "2025-07-19", texto: "Te regalaría el mundo" },
+               { src: U("1516589178581-6cd7833ae3b2"), fecha: "2025-07-20", texto: "Mi corazón en tus manos" },
+               { src: U("1501901609772-df0848060b33"), fecha: "2025-07-21", texto: "Contigo hasta perderme" } ] },
+    { frase: "Contigo aprendí que el amor está en los detalles pequeños.",
+      recuerdo: "El mensaje que me mandaste a las 3 de la mañana solo para decirme que soñaste conmigo.",
+      fotos: [ { src: U("1529634806980-85c3dd6d34ac"), fecha: "2025-09-14", texto: "Un año juntos" },
+               { src: U("1518199266791-5375a83190b7"), fecha: "2025-10-03", texto: "Luces y tú" },
+               { src: U("1494774157365-9e04c6720e47"), fecha: "2025-11-22", texto: "Nuestro abrazo" } ] },
+    { frase: "Casi es tu día, y yo ya estoy más emocionado que tú.",
+      recuerdo: "La Navidad en que me regalaste una carta que todavía guardo en mi billetera.",
+      fotos: [ { src: U("1511895426328-dc8714191300"), fecha: "2025-12-25", texto: "Nuestra Navidad" },
+               { src: U("1490750967868-88aa4486c946"), fecha: "2026-02-14", texto: "San Valentín" },
+               { src: U("1516589178581-6cd7833ae3b2"), fecha: "2026-04-05", texto: "Mi persona favorita" } ] },
+    { frase: "Mañana empieza tu día. Duerme bien, que te voy a mimar.",
+      recuerdo: "Hoy el recuerdo es el que vamos a crear mañana juntos.",
+      fotos: [ { src: U("1474552226712-ac0f0961a954"), fecha: "2026-06-20", texto: "Siempre tú y yo" },
+               { src: U("1518895949257-7621c3c786d7"), fecha: "2026-08-15", texto: "Lo mejor de mi vida" },
+               { src: U("1494774157365-9e04c6720e47"), fecha: "2026-10-01", texto: "Casi, casi..." } ] }
+  ],
+
+  // El día del cumpleaños
+  fotosCumple: [ { src: U("1511895426328-dc8714191300"), fecha: "2026-11-02", texto: "Hoy es tu día" },
+                 { src: U("1494774157365-9e04c6720e47"), fecha: "2026-11-02", texto: "Mi regalo eres tú" },
+                 { src: U("1529634806980-85c3dd6d34ac"), fecha: "2026-11-02", texto: "Feliz cumpleaños, mi amor" } ],
+  recuerdoCumple: "Hoy cumples 24 y yo agradezco cada uno de los días que me tocó compartir contigo.",
+  cartaCumple: "Feliz cumpleaños, mi vida.\n\nHoy el mundo celebra el día en que llegaste, y yo celebro cada día que te tengo conmigo.\n\nGracias por tu risa, por tu paciencia y por hacerme mejor.\n\nPide un deseo. Yo ya pedí el mío: que sigas a mi lado muchos cumpleaños más.",
+  deseo: "Tu deseo ya viajó hasta las estrellas. Ojalá se cumpla todo, mi amor.",
+
+  botonVisto: "Avisarle a Diego que ya lo vi 💖",
+  botonGracias: "Decirle gracias a Diego 💖",
+  mensajeGracias: "¡Gracias por mi sorpresa! Me encantó 💖",
+  pie: "Hecho con amor, solo para ti"
+};
+/* ============================================================ */
+
+const $ = id => document.getElementById(id);
+const el = (t,c,h)=>{const e=document.createElement(t); if(c) e.className=c; if(h!=null) e.innerHTML=h; return e;};
+const esc = s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pad = n=>String(n).padStart(2,"0");
+const guardar=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}; const leer=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+const DIA = 864e5;
+
+/* ---- Fecha objetivo y "ahora" (con modos de prueba) ---- */
+const objetivo = CONFIG.fecha ? new Date(CONFIG.fecha) : (()=>{ const d=new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate()+7); return d; })();
+const params = new URLSearchParams(location.search);
+const faltanParam = params.get("faltan");
+const simulando = params.get("modo")==="hoy" || (faltanParam!==null && !isNaN(+faltanParam));
+const t0 = Date.now();
+const ahora = ()=>{
+  if(params.get("modo")==="hoy") return new Date(objetivo.getTime()+60000+(Date.now()-t0));
+  if(faltanParam!==null && !isNaN(+faltanParam)) return new Date(objetivo.getTime()-(+faltanParam)*DIA-8*36e5+(Date.now()-t0));
+  return new Date();
+};
+const esHoy = ()=> ahora() >= objetivo;
+const diasRestantes = ()=> Math.max(0, Math.floor((objetivo-ahora())/DIA));
+const N = CONFIG.mensajes.length;
+const indiceHoy = ()=> Math.min(N-1, Math.max(0, (N-1) - diasRestantes()));
+
+function partes(ms){ const t=Math.max(0,Math.floor(ms/1000)); return { d:Math.floor(t/86400), h:Math.floor(t%86400/3600), m:Math.floor(t%3600/60), s:t%60 }; }
+const fechaLarga = d=>d.toLocaleDateString("es",{weekday:"long",day:"numeric",month:"long"});
+const claveDia = d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const sello = iso=>{ const [y,m,d]=iso.split("-"); return `${d} ${m} '${y.slice(2)}`; };
+
+/* ---- Textos fijos ---- */
+document.title = "Falta poco para tu cumpleaños, " + CONFIG.nombre;
+$("introTitulo").textContent = `Hay un regalo para ${CONFIG.nombre}`;
+$("introTxt").textContent = `${CONFIG.deParte} te dejó algo para cada día. Ábrelo.`;
+$("fechaTxt").textContent = objetivo.toLocaleDateString("es",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+$("btnVisto").textContent = CONFIG.botonVisto;
+$("btnGracias").textContent = CONFIG.botonGracias;
+$("pie").textContent = CONFIG.pie;
+
+/* ---- Globos y corazones ---- */
+(function(){
+  const c=$("globos"), cols=["#ff4d79","#ffc94d","#7ad7ff","#b58cff","#ff8f5c","#7affc4"];
+  for(let i=0;i<9;i++){
+    const g=el("i","globo"); g.style.left=(4+i*11)+"%"; g.style.background=cols[i%cols.length];
+    g.style.animationDuration=(16+Math.random()*12)+"s"; g.style.animationDelay=(-Math.random()*20)+"s"; c.appendChild(g);
+  }
+  for(let i=0;i<10;i++){
+    const h=el("i","corazon-f","♥"); h.style.left=Math.random()*100+"%"; h.style.fontSize=(.9+Math.random()*1.3)+"rem";
+    h.style.animationDuration=(10+Math.random()*10)+"s"; h.style.animationDelay=(-Math.random()*16)+"s"; c.appendChild(h);
+  }
+})();
+
+/* ---- Confeti ---- */
+const colores=["#ff4d79","#ffc94d","#7ad7ff","#b58cff","#ff8f5c","#7affc4","#ffffff"];
+function confeti(x,y,n=60,dist=240){
+  for(let i=0;i<n;i++){
+    const c=el("i","conf"); c.style.background=colores[i%colores.length];
+    if(i%3===0){ c.style.borderRadius="50%"; c.style.width=c.style.height="10px"; }
+    document.body.appendChild(c);
+    const a=Math.random()*Math.PI*2, d=dist*(.35+Math.random()*.9), g=(Math.random()*160)+120;
+    c.animate([
+      {transform:`translate(${x}px,${y}px) rotate(0)`,opacity:1},
+      {transform:`translate(${x+Math.cos(a)*d}px,${y+Math.sin(a)*d-90}px) rotate(${Math.random()*360}deg)`,opacity:1,offset:.45},
+      {transform:`translate(${x+Math.cos(a)*d*1.15}px,${y+Math.sin(a)*d+g}px) rotate(${Math.random()*720}deg)`,opacity:0}
+    ],{duration:1600+Math.random()*1200,easing:"cubic-bezier(.2,.6,.3,1)"}).onfinish=()=>c.remove();
+  }
+}
+function lluviaConfeti(){
+  for(let i=0;i<50;i++){
+    const c=el("i","conf"); c.style.background=colores[i%colores.length]; document.body.appendChild(c);
+    const x=Math.random()*innerWidth;
+    c.animate([{transform:`translate(${x}px,-20px) rotate(0)`,opacity:1},{transform:`translate(${x+(Math.random()*120-60)}px,${innerHeight+30}px) rotate(${Math.random()*900}deg)`,opacity:.9}],
+      {duration:2600+Math.random()*2400,delay:Math.random()*1200,easing:"ease-in",fill:"both"}).onfinish=()=>c.remove();
+  }
+}
+
+/* ---- Lightbox ---- */
+function abrirFoto(src,txt){ $("lbImg").src=src; $("lbTxt").textContent=txt||""; $("lightbox").classList.add("on"); }
+$("lightbox").onclick=e=>{ if(e.target.tagName!=="IMG") $("lightbox").classList.remove("on"); };
+addEventListener("keydown",e=>{ if(e.key==="Escape") $("lightbox").classList.remove("on"); });
+
+/* ---- Racha de días seguidos ---- */
+let rachaMem=[];
+function racha(){
+  const hoyK=claveDia(ahora());
+  let dias = rachaMem;
+  if(!simulando){ try{ dias=JSON.parse(leer("cumple-visitas")||"[]"); }catch(e){ dias=[]; } }
+  if(!dias.includes(hoyK)){ dias.push(hoyK); if(!simulando) guardar("cumple-visitas",JSON.stringify(dias)); else rachaMem=dias; }
+  const set=new Set(dias); let n=0; const d=ahora(); d.setHours(12,0,0,0);
+  while(set.has(claveDia(d))){ n++; d.setDate(d.getDate()-1); }
+  return Math.max(n,1);
+}
+
+/* ---- Carrusel de fotos del día ---- */
+let autoTimer=null;
+function pintarCarrusel(fotos){
+  const c=$("carrusel"), p=$("puntos"); c.innerHTML=""; p.innerHTML=""; clearInterval(autoTimer);
+  fotos.forEach((f,i)=>{
+    const s=el("div","slide"); const im=el("div","im"); const img=el("img"); img.src=f.src; img.alt=f.texto||""; img.onerror=()=>img.remove();
+    im.appendChild(img); if(f.fecha) im.appendChild(el("span","sello-fecha",sello(f.fecha)));
+    s.appendChild(im); if(f.texto) s.appendChild(el("p","pie",esc(f.texto)));
+    s.onclick=()=>abrirFoto(f.src,f.texto); c.appendChild(s); p.appendChild(el("i",i===0?"act":""));
+  });
+  c.scrollLeft=0;
+  c.onscroll=()=>{ const w=c.clientWidth+10, k=Math.min(fotos.length-1,Math.round(c.scrollLeft/w)); [...p.children].forEach((d,j)=>d.classList.toggle("act",j===k)); };
+  let usuario=false, k=0; ["touchstart","mousedown","wheel"].forEach(ev=>c.addEventListener(ev,()=>{usuario=true;},{passive:true}));
+  if(fotos.length>1) autoTimer=setInterval(()=>{
+    if(usuario) return; const r=c.getBoundingClientRect(); if(r.bottom<0||r.top>innerHeight) return;
+    k=(k+1)%fotos.length; const dest=k*(c.clientWidth+10), ini=c.scrollLeft, t1=performance.now();
+    c.style.scrollSnapType="none";
+    const iv=setInterval(()=>{ const q=Math.min((performance.now()-t1)/600,1), e=1-Math.pow(1-q,3); c.scrollLeft=ini+(dest-ini)*e; if(q>=1){ clearInterval(iv); c.style.scrollSnapType=""; } },16);
+  },3400);
+}
+
+/* ---- Mensaje de hoy ---- */
+function dato(html,extra){ return el("div","dato"+(extra?" "+extra:""),html); }
+function pintarHoy(){
+  const hoy=esHoy(), caja=$("datos"); caja.innerHTML="";
+  let fotos, frase, chip, recuerdo;
+  if(hoy){ fotos=CONFIG.fotosCumple; frase=`¡Feliz cumpleaños, ${CONFIG.nombre}!`; chip="HOY ES TU DÍA"; recuerdo=CONFIG.recuerdoCumple; }
+  else { const m=CONFIG.mensajes[indiceHoy()]; fotos=m.fotos; frase=m.frase; recuerdo=m.recuerdo; chip=`DÍA ${indiceHoy()+1} DE ${N} · ${fechaLarga(ahora()).toUpperCase()}`; }
+  $("chip").textContent=chip; $("hoyFrase").textContent=frase; $("hoyFirma").textContent="— "+CONFIG.deParte+" ♥";
+  pintarCarrusel(fotos);
+  if(CONFIG.juntosDesde){
+    const dj=Math.floor((ahora()-new Date(CONFIG.juntosDesde+"T00:00:00"))/DIA);
+    if(dj>0) caja.appendChild(dato(`💞 Hoy se cumplen <b>${dj.toLocaleString("es")}</b> días juntos`));
+  }
+  if(recuerdo) caja.appendChild(dato(`<b>Recuerdo del día:</b> ${esc(recuerdo)}`,"recuerdo"));
+  const r=racha();
+  caja.appendChild(dato(r>=2?`🔥 Llevas <b>${r}</b> días seguidos abriendo tu sorpresa`:`✨ Este es tu primer día abriendo tu sorpresa. Vuelve mañana.`));
+}
+function pintarPrevios(){
+  const caja=$("previos"); caja.innerHTML="";
+  const hasta = esHoy() ? N : indiceHoy();
+  const enInicio = !esHoy() && diasRestantes()>N-1;
+  if(hasta<=0 || enInicio){
+    caja.className="vacio"; caja.textContent="Aquí irán apareciendo los mensajes de los días anteriores. Vuelve mañana."; $("subPrev").textContent=""; return;
+  }
+  caja.className="previos"; $("subPrev").textContent="Toca una foto para verla grande.";
+  for(let i=hasta-1;i>=0;i--){
+    const m=CONFIG.mensajes[i], d=new Date(objetivo.getTime()-(N-i)*DIA), f=m.fotos[0];
+    const p=el("div","prev",`<div class="im"><img src="${esc(f.src)}" alt="" loading="lazy">${f.fecha?`<span class="sello-fecha">${sello(f.fecha)}</span>`:""}</div><small>${esc(fechaLarga(d).toUpperCase())}</small><p>${esc(m.frase)}</p>`);
+    p.querySelector("img").onerror=e=>e.target.remove();
+    p.onclick=()=>abrirFoto(f.src,m.frase); caja.appendChild(p);
+  }
+}
+function pintarManana(){
+  const caja=$("manana");
+  if(esHoy()){ caja.style.display="none"; return; }
+  caja.style.display="";
+  const n=ahora(), medianoche=new Date(n); medianoche.setHours(24,0,0,0);
+  if(diasRestantes()<=0){ caja.innerHTML=`<small>Mañana</small><b>¡Es tu cumpleaños!</b>`; return; }
+  const p=partes(Math.min(medianoche,objetivo)-n);
+  caja.innerHTML=`<small>El mensaje de mañana se abre en</small><b>${pad(p.h)}:${pad(p.m)}:${pad(p.s)}</b>`;
+}
+
+/* ---- Torta ---- */
+function pastelSVG(){
+  const digs=String(CONFIG.edad).split(""), sep=44, x0=140-(digs.length-1)*sep/2;
+  const velas=digs.map((d,i)=>{ const x=x0+i*sep;
+    return `<text x="${x}" y="96" text-anchor="middle" font-family="Quicksand,sans-serif" font-weight="700" font-size="58" fill="${i%2?'#7ad7ff':'#ffd54a'}" stroke="${i%2?'#2f8fc4':'#e8a200'}" stroke-width="2.5" paint-order="stroke">${d}</text>
+      <path class="llama" d="M${x} 20C${x-8} 32 ${x-6} 44 ${x} 50C${x+6} 44 ${x+8} 32 ${x} 20Z" fill="#ffb21f"/>
+      <path class="llama b" d="M${x} 32C${x-3.5} 38 ${x-3} 44 ${x} 47C${x+3} 44 ${x+3.5} 38 ${x} 32Z" fill="#fff2a8"/>
+      <circle class="humo" cx="${x}" cy="22" r="6" fill="#fff"/>`; }).join("");
+  const fresa=(x,y)=>`<g transform="translate(${x} ${y})"><path d="M0 -2C-9 -2 -10 10 0 17C10 10 9 -2 0 -2Z" fill="#e8294c"/><path d="M-5 -3l5 -5l5 5z" fill="#3a9d4a"/><circle cx="-3" cy="5" r="1" fill="#ffd1da"/><circle cx="3" cy="8" r="1" fill="#ffd1da"/></g>`;
+  const perlas=Array.from({length:12},(_,i)=>`<circle cx="${42+i*17.3}" cy="236" r="4.5" fill="#fff"/>`).join("");
+  return `<svg viewBox="0 0 280 275" role="img" aria-label="Pastel de cumpleaños con velas">
+    <ellipse cx="140" cy="258" rx="130" ry="15" fill="#e9d9ff"/><ellipse cx="140" cy="254" rx="118" ry="11" fill="#fff"/>
+    <rect x="30" y="172" width="220" height="74" rx="14" fill="#ff7a9c"/>
+    <rect x="58" y="122" width="164" height="56" rx="12" fill="#ffb3c9"/>
+    <rect x="84" y="84" width="112" height="44" rx="12" fill="#fff5ee"/>
+    <path d="M30 184q10 20 20 0t20 0t20 0t20 0t20 0t20 0t20 0t20 0t20 0t20 0t20 0" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round"/>
+    <path d="M58 134q10 17 20 0t20 0t20 0t20 0t20 0t20 0t20 0t20 0" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+    <path d="M84 96q10 15 20 0t20 0t20 0t20 0t20 0" fill="none" stroke="#ff9fb8" stroke-width="7" stroke-linecap="round"/>
+    ${perlas}
+    <text x="140" y="154" text-anchor="middle" font-family="Pacifico,cursive" font-size="15" fill="#b3124a">Feliz cumple</text>
+    <text x="140" y="222" text-anchor="middle" font-family="Pacifico,cursive" font-size="26" fill="#fff">${esc(CONFIG.nombre)}</text>
+    ${fresa(94,82)}${fresa(186,82)}${fresa(70,121)}${fresa(210,121)}
+    ${velas}</svg>`;
+}
+let pastelListo=false, soplado=false;
+function apagarVelas(){
+  if(soplado) return; soplado=true; const w=document.querySelector(".pastel-wrap"); if(w) w.classList.add("apagado");
+  $("micEstado").textContent="";
+  setTimeout(()=>{ confeti(innerWidth/2,innerHeight/2,110,320); lluviaConfeti(); $("deseo").textContent=CONFIG.deseo; },700);
+}
+function mostrarPastel(){
+  if(pastelListo) return; pastelListo=true; $("secPastel").hidden=false;
+  const w=el("div","pastel-wrap",pastelSVG()); w.onclick=apagarVelas; $("pastelCaja").appendChild(w);
+  const k=$("cartaCumple"); k.textContent=CONFIG.cartaCumple+"\n"; const f=el("span","fir"); f.textContent="— "+CONFIG.deParte+" ♥"; k.appendChild(f);
+  $("btnGracias").hidden=false; $("btnVisto").hidden=true;
+}
+
+/* ---- Soplar con el micrófono (gratis, pide permiso) ---- */
+async function soplarMic(){
+  const est=$("micEstado");
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){ est.textContent="Tu navegador no deja usar el micrófono. Toca el pastel para apagar las velas."; return; }
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    const ctx=new (window.AudioContext||window.webkitAudioContext)(), src=ctx.createMediaStreamSource(stream), an=ctx.createAnalyser();
+    an.fftSize=1024; src.connect(an); const buf=new Float32Array(an.fftSize); let seguidos=0;
+    est.textContent="Te escucho… acércate y sopla fuerte 🌬️";
+    const fin=()=>{ clearInterval(iv); stream.getTracks().forEach(t=>t.stop()); ctx.close(); };
+    const iv=setInterval(()=>{
+      an.getFloatTimeDomainData(buf); let s=0; for(const v of buf) s+=v*v; const rms=Math.sqrt(s/buf.length);
+      seguidos = rms>0.12 ? seguidos+1 : 0;
+      if(seguidos>=4){ fin(); apagarVelas(); }
+    },60);
+    setTimeout(()=>{ if(!soplado){ fin(); est.textContent="No te escuché. Toca el pastel para apagar las velas."; } },15000);
+  }catch(e){ est.textContent="No pude usar el micrófono. Toca el pastel para apagar las velas."; }
+}
+$("btnMic").onclick=soplarMic;
+
+/* ---- "Cumpleaños feliz" (se genera con el sonido del navegador, sin archivos) ---- */
+let ctxCanto=null;
+const Hz={C4:261.63,D4:293.66,E4:329.63,F4:349.23,G4:392,A4:440,Bb4:466.16,C5:523.25};
+const MELODIA=[["C4",.75],["C4",.25],["D4",1],["C4",1],["F4",1],["E4",2],
+               ["C4",.75],["C4",.25],["D4",1],["C4",1],["G4",1],["F4",2],
+               ["C4",.75],["C4",.25],["C5",1],["A4",1],["F4",1],["E4",1],["D4",2],
+               ["Bb4",.75],["Bb4",.25],["A4",1],["F4",1],["G4",1],["F4",2]];
+function cantar(){
+  try{ ctxCanto = ctxCanto || new (window.AudioContext||window.webkitAudioContext)(); ctxCanto.resume&&ctxCanto.resume(); }catch(e){ return; }
+  const ctx=ctxCanto, beat=.5; let t=ctx.currentTime+.15, total=0;
+  const bajoMusica=!audio.paused; if(bajoMusica) audio.volume=Math.min(CONFIG.volumen,.12);
+  MELODIA.forEach(([n,b])=>{
+    const o=ctx.createOscillator(), g=ctx.createGain(), dur=b*beat;
+    o.type="triangle"; o.frequency.value=Hz[n]; o.connect(g); g.connect(ctx.destination);
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.28,t+.03); g.gain.exponentialRampToValueAtTime(.001,t+dur*.95);
+    o.start(t); o.stop(t+dur); t+=dur; total+=dur;
+  });
+  if(bajoMusica) setTimeout(()=>{ audio.volume=CONFIG.volumen; },total*1000+400);
+}
+$("btnCantar").onclick=cantar;
+
+/* ---- Cuenta regresiva y cambio de modo ---- */
+let modoHoy=null;
+function poner(id,v){ const e=$(id), t=String(v); if(e.textContent!==t){ e.textContent=t; e.classList.remove("tic"); void e.offsetWidth; e.classList.add("tic"); } }
+function aplicarModo(hoy,primera){
+  if(hoy===modoHoy) return; modoHoy=hoy;
+  if(hoy){
+    $("peq").textContent="Hoy es tu día"; $("titulo").textContent=`¡Feliz cumpleaños, ${CONFIG.nombre}!`; $("cuenta").style.display="none";
+    mostrarPastel();
+    if(!primera){ confeti(innerWidth/2,innerHeight/3,120,320); lluviaConfeti(); cantar(); }
+  } else {
+    $("peq").textContent="Falta poco para tu cumpleaños"; $("cuenta").style.display="";
+  }
+  pintarHoy(); pintarPrevios();
+}
+let ultimoIndice=-1;
+function tick(){
+  const falta=objetivo-ahora();
+  aplicarModo(falta<=0,false);
+  if(falta>0){
+    const p=partes(falta); poner("c-d",p.d); poner("c-h",p.h); poner("c-m",p.m); poner("c-s",p.s);
+    $("titulo").innerHTML = p.d>0 ? `Faltan <span style="color:var(--oro)">${p.d}</span> ${p.d===1?"día":"días"}` : `¡Faltan solo <span style="color:var(--oro)">${p.h}</span> horas!`;
+  }
+  const idx=indiceHoy(); if(idx!==ultimoIndice && !esHoy()){ ultimoIndice=idx; pintarHoy(); pintarPrevios(); }
+  pintarManana();
+}
+
+/* ---- Música y regalo ---- */
+const audio=$("audio");
+if(CONFIG.musica){ audio.src=CONFIG.musica; audio.volume=CONFIG.volumen; $("musica").style.display="block"; }
+$("musica").onclick=()=>{ if(audio.paused) audio.play(); else audio.pause(); };
+audio.onplay=()=>{ $("musica").textContent="🎵"; $("musica").classList.add("suena"); };
+audio.onpause=()=>{ $("musica").textContent="🔇"; $("musica").classList.remove("suena"); };
+let abierto=false;
+$("regalo").onclick=()=>{
+  if(abierto) return; abierto=true;
+  $("regalo").classList.add("abierto");
+  if(CONFIG.musica) audio.play().catch(()=>{});
+  try{ ctxCanto=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){}
+  const r=$("regalo").getBoundingClientRect();
+  setTimeout(()=>confeti(r.left+r.width/2,r.top+30,90,280),400);
+  setTimeout(()=>{ $("intro").classList.add("fuera"); document.body.classList.remove("bloqueado"); lluviaConfeti(); if(esHoy()) setTimeout(cantar,900); },1500);
+};
+
+/* ---- Botones de WhatsApp ---- */
+const wa=txt=>{ const tel=(CONFIG.telefono||"").replace(/\D/g,""); window.open(`https://wa.me/${tel}?text=${encodeURIComponent(txt)}`,"_blank"); };
+$("btnVisto").onclick=e=>{
+  confeti(e.clientX,e.clientY,40,200);
+  const m=esHoy()?null:CONFIG.mensajes[indiceHoy()];
+  wa(`Ya vi mi mensaje de hoy (día ${indiceHoy()+1} de ${N}) 💖\n«${m?m.frase:""}»\nGracias, ${CONFIG.deParte}.`);
+};
+$("btnGracias").onclick=e=>{ confeti(e.clientX,e.clientY,70,240); wa(CONFIG.mensajeGracias); };
+
+aplicarModo(esHoy(),true); tick(); setInterval(tick,1000);
+</script>
+</body>
+</html>
